@@ -43,6 +43,7 @@ def generate_log_line(ts: datetime, reg_id: str) -> str:
 def create_dataset():
     start_time = datetime(2026, 10, 15, 7, 0, 0)
     file_idx = 0
+    random.seed(42)
 
     for store in STORES:
         for reg in REGISTERS:
