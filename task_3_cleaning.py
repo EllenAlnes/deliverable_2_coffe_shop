@@ -12,13 +12,13 @@ def clean_outliers(paylog: str) -> np.array:  # MÅ ENDRE SÅ DEN TAR EN VILKÅR
             Array containing outlier-cleaned transactions.
         """
     # list of all transactions
-    pretrans = []
-
-    with open(paylog) as f:
-        for tran in f:
-            for word in tran.split():
-                if word.startswith("price"):
-                    pretrans.append(float(word.split("=")[1]))
+    #pretrans = []
+    
+    #with open(paylog) as f:
+    #    for tran in f:
+    #        for word in tran.split():
+    #            if word.startswith("price"):
+    #                pretrans.append(float(word.split("=")[1]))
 
     # convert list to 1D array
     cleaned = np.array(pretrans)
@@ -45,25 +45,20 @@ def list_of_dict_opg1():
     ]
     return a
 
-    #for i in list_of_dict_opg1[i]["status"="SUCCESS"]["price"]:
-        #sales = 
-    #sales_arr = np.array(sales)
-
 # need a function for making arrays of sales and refunds each
-def values_from_status(transactions: list[dict], stat: str) -> np.array: 
-    prices = []
-    for i in transactions:
-        if i["status"] == stat:
-            prices.append(i["price"])
-
-    prices_arr = np.array(prices)
-    return prices_arr
+#def values_from_status(transactions: list[dict], stat: str) -> np.array: 
+#    prices = []
+#    for i in transactions:
+#        if i["status"] == stat:
+#            prices.append(i["price"])
+#
+#    prices_arr = np.array(prices)
+#    return prices_arr
 
 #print(values_from_status(list_of_dict_opg1(), "SUCCESS"))
 #print(values_from_status(list_of_dict_opg1(), "REFUND"))
 
-# from dataframe of 
-def compute_refund_ratio(sales_count: np.ndarray, refund_count: np.ndarray) -> np.ndarray
+def compute_refund_ratio(sales_count: np.ndarray, refund_count: np.ndarray) -> np.ndarray:
     """Calculates the ratio between element-wise sales and refund values.
     
         Arguments:
