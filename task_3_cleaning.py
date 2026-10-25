@@ -62,16 +62,24 @@ def values_from_status(transactions: list[dict], stat: str) -> np.array:
 #print(values_from_status(list_of_dict_opg1(), "SUCCESS"))
 #print(values_from_status(list_of_dict_opg1(), "REFUND"))
 
+# from dataframe of 
 def compute_refund_ratio(sales_count: np.ndarray, refund_count: np.ndarray) -> np.ndarray
-    """
+    """Calculates the ratio between element-wise sales and refund values.
     
         Arguments:
-            sales_count: Array of all sales values (transactions with status (SUCCESS)).
+            sales_count: Array of the sales count for each element.
             
-            refund_count: Array of all refumd values (transactions with status (REFUND)).
+            refund_count: Array of the refund count for each element.
 
         Returns:
-            Array containing .
+            Array containing the sales/refund ratio element-wise.
         """
-# helvettttte ee jeg trenger jo ikke å hente ut arrayene fra hennes list[dict], denne funksjonen skal brukes på noe annet senere, jeg trenger bare
+    ratios = []
+    for ref, sale in zip(refund_count, sales_count):
+        rat = ref / (sale + 1e-6)
+        ratios.append(rat)
+    ratios_arr = np.array(ratios)
+
+    return ratios_arr
+
     
