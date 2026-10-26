@@ -1,39 +1,6 @@
 
 import numpy as np
-
-# make cleaning function:
-def clean_outliers(paylog: str) -> np.array:  # MÅ ENDRE SÅ DEN TAR EN VILKÅRLIG ARRAY SOM INPUT
-    """Changes outlying transactions values in payment log, to the mean of valid transactions.
-    
-        Arguments:
-            paylog: name of file of all transactions in a cash register.
-    
-        Returns:
-            Array containing outlier-cleaned transactions.
-        """
-    # list of all transactions
-    #pretrans = []
-    
-    #with open(paylog) as f:
-    #    for tran in f:
-    #        for word in tran.split():
-    #            if word.startswith("price"):
-    #                pretrans.append(float(word.split("=")[1]))
-
-    # convert list to 1D array
-    cleaned = np.array(pretrans)
-
-    # change invalid transactions in the array (by using deviation function) with mean value of the array
-    mu = np.mean(cleaned)
-    sigma = np.std(cleaned)
-
-    for i in range(len(cleaned)):
-        if cleaned[i] - mu > 3*sigma:
-            cleaned[i] = mu
-
-    return cleaned
-
-#test = clean_outliers("data/2026/library_cafe/POS_01/register_sales.log")
+import pandas as pd
 
 # make a dummy version of the function from task 1 (last deloppgave)
 def list_of_dict_opg1():
@@ -45,18 +12,36 @@ def list_of_dict_opg1():
     ]
     return a
 
-# need a function for making arrays of sales and refunds each
-#def values_from_status(transactions: list[dict], stat: str) -> np.array: 
-#    prices = []
-#    for i in transactions:
-#        if i["status"] == stat:
-#            prices.append(i["price"])
-#
-#    prices_arr = np.array(prices)
-#    return prices_arr
 
-#print(values_from_status(list_of_dict_opg1(), "SUCCESS"))
-#print(values_from_status(list_of_dict_opg1(), "REFUND"))
+# make cleaning function:
+def clean_outliers(df: pd.DataFrame) -> np.array:  
+    """Changes outlying transactions values dataframe, to the meadian of valid transactions.
+    
+        Arguments:
+            df: DataFrame with invalid outlying price values.
+    
+        Returns:
+            Array containing outlier-cleaned transactions.
+        """
+    # converts price values to array
+    cleaned = df["price"].to_numpy()
+
+    mu = np.mean(cleaned)
+    sigma = np.std(cleaned)
+
+    # gather outlying values.
+    outliers = cleaned > mu + 3*sigma
+
+    valid_prices = cleaned[~outliers]
+    median_valid = np.median(valid_prices)
+
+    # replaces all outlier values in cleaned, with the median of the valid prices.
+    cleaned[outliers] = median_valid
+
+    return cleaned
+
+#test = clean_outliers("data/2026/library_cafe/POS_01/register_sales.log")
+
 
 def compute_refund_ratio(sales_count: np.ndarray, refund_count: np.ndarray) -> np.ndarray:
     """Calculates the ratio between element-wise sales and refund values.

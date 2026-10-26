@@ -1,7 +1,7 @@
 
 import numpy as np
 import pandas as pd
-#from "task_3_cleaning" import compute_refund_ratio
+from "task_3_cleaning.py" import compute_refund_ratio()
 
 
 # make a dummy version of the function from task 1 (last deloppgave)
@@ -31,7 +31,6 @@ def chrono(transactions: list[dict]) -> pd.DataFrame:
     return df
 
 test = chrono(list_of_dict_opg1())
-#print(test.groupby("item"))
 
 
 
@@ -43,13 +42,10 @@ def one_hour(a_dataframe: pd.DataFrame) -> pd.DataFrame:
 
     Returns:
         DataFrame sorted by 1-hour windows. One row for each item, within each 1-hour window.
-    """    
-    #a_dataframe = a_dataframe.groupby("item").resample("1h").sum()
-    a_dataframe = a_dataframe.groupby("item").resample("1h")["price"].sum() 
-    return a_dataframe
+    """   
+    return a_dataframe.groupby("item").resample("1h")["price"].sum() 
 
 #print(one_hour(test))
-
 
 
 def by_status(b_dataframe: pd.DataFrame) -> pd.pivot_table:
@@ -67,8 +63,8 @@ def by_status(b_dataframe: pd.DataFrame) -> pd.pivot_table:
         columns="status", 
         aggfunc="size"
     )
-
 #print(by_status(test))
+
 
 def use_ratio(c_dataframe: pd.DataFrame) -> np.array:
     """Calculates the ratio between element-wise sales and refund values in given DataFrame.
@@ -79,11 +75,11 @@ def use_ratio(c_dataframe: pd.DataFrame) -> np.array:
         Returns:
             Array containing the sales/refund ratio element-wise.
         """
-    c_dataframe = c_dataframe.groupby(["item", "status"]).size()
-    a = [i for i in c_dataframe[i]["status"]="SUCCESS"]
-    #b = 
-    #return compute_refund_ratio()
-    return a
+    counts = c_dataframe.groupby(["item", "status"]).size().unstack(fill_value=0)
+    success_arr = counts["SUCCESS"].to_numpy()
+    refund_arr = counts["REFUND"].to_numpy()
+
+    return compute_refund_ratio(refund_arr, success_arr)
  
 
-print(use_ratio(test))
+#print(use_ratio(test))
