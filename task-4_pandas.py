@@ -1,6 +1,7 @@
 
-import numpy as numpy
+import numpy as np
 import pandas as pd
+#from "task_3_cleaning" import compute_refund_ratio
 
 
 # make a dummy version of the function from task 1 (last deloppgave)
@@ -58,7 +59,7 @@ def by_status(b_dataframe: pd.DataFrame) -> pd.pivot_table:
         b_dataframe: dataframe sorted by timestamp, containing transactions.
 
     Returns:
-        Pivot table
+        Pivot table.
     """    
     return pd.pivot_table(
         b_dataframe,
@@ -68,3 +69,21 @@ def by_status(b_dataframe: pd.DataFrame) -> pd.pivot_table:
     )
 
 #print(by_status(test))
+
+def use_ratio(c_dataframe: pd.DataFrame) -> np.array:
+    """Calculates the ratio between element-wise sales and refund values in given DataFrame.
+        
+        Arguments:
+            c_dataframe: A dataframe containing transactions, either a sale, refund or cancelled transaction.
+
+        Returns:
+            Array containing the sales/refund ratio element-wise.
+        """
+    c_dataframe = c_dataframe.groupby(["item", "status"]).size()
+    a = [i for i in c_dataframe[i]["status"]="SUCCESS"]
+    #b = 
+    #return compute_refund_ratio()
+    return a
+ 
+
+print(use_ratio(test))
