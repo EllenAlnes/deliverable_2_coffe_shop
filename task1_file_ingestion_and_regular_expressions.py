@@ -77,3 +77,44 @@ match = re.fullmatch(pattern, test_line)
 
 if match:
     print(match.groupdict())
+
+
+def parse_log(file_text_content: str) -> list[dict]:
+    # Parserfunksjonen tar imot en loggfil, undersøker den en linje om gangen go ignorerer det som ikke er gyldig linje
+    """takes the result for the prior funciton as inputfile.
+    Parser function that takes a input log file and analyses it line by line. 
+    Keeping valid transactions and filters out any noice.
+    
+    Return:
+        Returns a list of dictionarys whith valid transactions"""
+
+    # Regex pattern for valid transactions
+    pattern = (
+    r"\[(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\] " 
+    r"\[(?P<register_id>\w+)\] " 
+    r"item=(?P<item>\S+) " 
+    r"price=(?P<price>\d+\.\d+) "  
+    r"(?P<currency>EUR|NOK|USD) " 
+    r"\((?P<status>SUCCESS|REFUND|CANCELLED)\)" 
+) 
+    # empty list to collect the valid lines in the logfiles
+    valid_transactions = []
+
+    # splits up the file so we can work with it line by line
+    for line in file_text_content.splitlines():
+
+        #check whether this line matches the pattern
+        match = re.fullmatch(pattern, line)
+
+        # if the line is valid, extract this field
+        if match:
+            transaction = match.groupdict()
+
+            # convert prise to float
+            transaction["price"] = float(transaction["price"])
+
+            # add the transaction to the list
+            valid_transactions.append(transaction)
+
+    return valid_transactions
+
