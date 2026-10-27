@@ -53,3 +53,7 @@ print(f"Number of log files: {len(log_files)}")
 for log_file in log_files:
     print(log_file)
 
+
+def find_active_registers(data: dict | list) -> set[str]:
+    """Find the active registers
+    active = True"""
