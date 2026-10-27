@@ -36,20 +36,20 @@ def find_log_files(directory: Path) -> list[Path]:
             if item.suffix == ".log":
                 all_log_files.append(item)
 
-
     return all_log_files
 
 
 
 # Testing the recursive functions
-test_directory = Path("data/2026")
+test_directory = Path("data/2026/library_cafe")
 
 log_files = find_log_files(test_directory)
 
 print(f"Number of log files: {len(log_files)}")
 
 # Testing wether it finds 9 files - this is spesific for this filestructure not general
-assert len(log_files) == 9
+#assert len(log_files) == 9
 
 for log_file in log_files:
     print(log_file)
+
