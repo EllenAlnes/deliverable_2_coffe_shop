@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 
 # Hvordan løse oppgavene?
 
@@ -37,6 +38,7 @@ def read_file(input_file: Path) -> tuple[str, str]:
             file_text_content = file.read()
             encoding_used = "ISO-8859-1"
 
+    # Returns a tuple with file_text_content and encoding_used
     return file_text_content, encoding_used
 
 
@@ -47,3 +49,31 @@ file_text_content, encoding_used = read_file(test_file)
 
 print(f"Encoding used: {encoding_used}")
 print(file_text_content[:500])  # prints the first 500 signs
+
+# Write a function that uses regular expressions to go through the files
+# Example log complete log line
+# [2026-10-15 08:30:00] [POS_01] item=Latte price=4.50 EUR (SUCCESS)
+
+
+# Creating pattern for grouped for de data
+# () - groups result together
+# ?P<...> names the group
+# r"..." raw string
+
+pattern = (
+    r"\[(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\] " 
+    r"\[(?P<register_id>\w+)\] " 
+    r"item=(?P<item>\S+) " 
+    r"price=(?P<price>\d+\.\d+) "  
+    r"(?P<currency>EUR|NOK|USD) " 
+    r"\((?P<status>SUCCESS|REFUND|CANCELLED)\)" 
+) 
+
+# Testing if the regex pattern works
+test_line = (
+    "[2026-10-15 08:30:00] [POS_01] item=Latte price=4.50 EUR (SUCCESS)")
+
+match = re.fullmatch(pattern, test_line)
+
+if match:
+    print(match.groupdict())
