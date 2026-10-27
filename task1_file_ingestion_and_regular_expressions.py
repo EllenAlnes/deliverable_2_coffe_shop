@@ -42,13 +42,13 @@ def read_file(input_file: Path) -> tuple[str, str]:
     return file_text_content, encoding_used
 
 
-# Testing the function on one of the files
-test_file = Path("data/2026/library_cafe/POS_03/register_sales.log")
+# # Testing the read_file function on one of the files
+# test_file = Path("data/2026/library_cafe/POS_03/register_sales.log")
 
-file_text_content, encoding_used = read_file(test_file)
+# file_text_content, encoding_used = read_file(test_file)
 
-print(f"Encoding used: {encoding_used}")
-print(file_text_content[:500])  # prints the first 500 signs
+# print(f"Encoding used: {encoding_used}")
+# print(file_text_content[:500])  # prints the first 500 signs
 
 # Write a function that uses regular expressions to go through the files
 # Example log complete log line
@@ -60,23 +60,23 @@ print(file_text_content[:500])  # prints the first 500 signs
 # ?P<...> names the group
 # r"..." raw string
 
-pattern = (
-    r"\[(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\] " 
-    r"\[(?P<register_id>\w+)\] " 
-    r"item=(?P<item>\S+) " 
-    r"price=(?P<price>\d+\.\d+) "  
-    r"(?P<currency>EUR|NOK|USD) " 
-    r"\((?P<status>SUCCESS|REFUND|CANCELLED)\)" 
-) 
+# pattern = (
+#     r"\[(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\] " 
+#     r"\[(?P<register_id>\w+)\] " 
+#     r"item=(?P<item>\S+) " 
+#     r"price=(?P<price>\d+\.\d+) "  
+#     r"(?P<currency>EUR|NOK|USD) " 
+#     r"\((?P<status>SUCCESS|REFUND|CANCELLED)\)" 
+# ) 
 
 # Testing if the regex pattern works
-test_line = (
-    "[2026-10-15 08:30:00] [POS_01] item=Latte price=4.50 EUR (SUCCESS)")
+# test_line = (
+#     "[2026-10-15 08:30:00] [POS_01] item=Latte price=4.50 EUR (SUCCESS)")
 
-match = re.fullmatch(pattern, test_line)
+# match = re.fullmatch(pattern, test_line)
 
-if match:
-    print(match.groupdict())
+# if match:
+#     print(match.groupdict())
 
 
 def parse_log(file_text_content: str) -> list[dict]:
@@ -118,3 +118,35 @@ def parse_log(file_text_content: str) -> list[dict]:
 
     return valid_transactions
 
+#testing with valid and invalid lines
+# test_text = (
+#     "[2026-10-15 08:30:00] [POS_01] "
+#     "item=Latte price=4.50 EUR (SUCCESS)\n"
+#     "--- PRINTER PAPER LOW WARNING ---\n"
+#     "[2026-10-15 08:31:00] [POS_01] "
+#     "item=Muffin price=3.94 EUR (SUCCESS)\n"
+#     "=== NETWORK SYNC OK ==="
+# )
+
+# result = parse_log(test_text)
+# print(result)
+
+# # Testing noise
+# noise_text = (
+#     "--- PRINTER PAPER LOW WARNING ---\n"
+#     "=== NETWORK SYNC OK ==="
+# )
+
+# print(parse_log(noise_text))
+
+
+# Testing the read_file function on one of the files
+test_file = Path("data/2026/student_union/POS_01/register_sales.log")
+
+file_text_content, encoding_used = read_file(test_file)
+
+# call the parcer function
+transactions = parse_log(file_text_content)
+print(transactions)
+
+print(f"Number of valid transactions: {len(transactions)}")
