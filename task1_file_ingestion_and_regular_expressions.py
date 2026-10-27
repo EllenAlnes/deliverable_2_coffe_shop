@@ -1,30 +1,15 @@
-from pathlib import Path
 import re
-
-# Hvordan løse oppgavene?
-
-# pathlib.Path til file path
-# håndtere ulik encoding: UTF-8 og ISO-8859-1/Latin-1
-# return tuple med to strings: (file_text_conect, encoding_used)
-
-# skriv en log parser funksjon - tar data som input og strukturerer det
-# bruk regular expression - re modul
-
-# return - liste med python dictionaries, hver dict er en gyldig transaksjon
-
-
-# funksjon 1 - leser filer med ulik encoding
-# funksjon 2 - bruker regulære uttrykk til å hente ut transaksjoner
+from pathlib import Path
 
 
 def read_file(input_file: Path) -> tuple[str, str]:
     """Read a file and return its content and the encoding used.
     
     Arguments:
-        input_file: Path to the file to be read.
+        input_file: Path to the file to read.
         
     Returns:
-        A tuple containing the file text content and the encoding used."""
+        A tuple containing the file content as a string and the encoding used as a string."""
     
     try:
         # Try to read the file with UTF-8 encoding
@@ -42,53 +27,25 @@ def read_file(input_file: Path) -> tuple[str, str]:
     return file_text_content, encoding_used
 
 
-# # Testing the read_file function on one of the files
-# test_file = Path("data/2026/library_cafe/POS_03/register_sales.log")
+def parse_log(file_text_content: str) -> list[dict[str, str | float]]:
+    """Parse log file content and and return valid transactions.
 
-# file_text_content, encoding_used = read_file(test_file)
+    A parser function analyses text and extracts structured information from it according to a defined format.
 
-# print(f"Encoding used: {encoding_used}")
-# print(file_text_content[:500])  # prints the first 500 signs
+    Arguments:
+        file_text_content: The complete text content of a log file.
 
-# Write a function that uses regular expressions to go through the files
-# Example log complete log line
-# [2026-10-15 08:30:00] [POS_01] item=Latte price=4.50 EUR (SUCCESS)
-
-
-# Creating pattern for grouped for de data
-# () - groups result together
-# ?P<...> names the group
-# r"..." raw string
-
-# pattern = (
-#     r"\[(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\] " 
-#     r"\[(?P<register_id>\w+)\] " 
-#     r"item=(?P<item>\S+) " 
-#     r"price=(?P<price>\d+\.\d+) "  
-#     r"(?P<currency>EUR|NOK|USD) " 
-#     r"\((?P<status>SUCCESS|REFUND|CANCELLED)\)" 
-# ) 
-
-# Testing if the regex pattern works
-# test_line = (
-#     "[2026-10-15 08:30:00] [POS_01] item=Latte price=4.50 EUR (SUCCESS)")
-
-# match = re.fullmatch(pattern, test_line)
-
-# if match:
-#     print(match.groupdict())
-
-
-def parse_log(file_text_content: str) -> list[dict]:
-    # Parserfunksjonen tar imot en loggfil, undersøker den en linje om gangen go ignorerer det som ikke er gyldig linje
-    """takes the result for the prior funciton as inputfile.
-    Parser function that takes a input log file and analyses it line by line. 
-    Keeping valid transactions and filters out any noice.
-    
-    Return:
-        Returns a list of dictionarys whith valid transactions"""
+    Returns:
+        A list of dictionaries containing valid transactions.
+        Each dictionary contains the timestamt, register ID, item,
+        price, currency, and status. The price is stored as a float.
+        Lines that do not match the expected log format are ignored.
+    """
 
     # Regex pattern for valid transactions
+    # () - groups result together
+    # ?P<...> names the group
+    # r"..." raw string
     pattern = (
     r"\[(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\] " 
     r"\[(?P<register_id>\w+)\] " 
@@ -103,7 +60,7 @@ def parse_log(file_text_content: str) -> list[dict]:
     # splits up the file so we can work with it line by line
     for line in file_text_content.splitlines():
 
-        #check whether this line matches the pattern
+        # check whether this line matches the pattern
         match = re.fullmatch(pattern, line)
 
         # if the line is valid, extract this field
@@ -118,28 +75,8 @@ def parse_log(file_text_content: str) -> list[dict]:
 
     return valid_transactions
 
-#testing with valid and invalid lines
-# test_text = (
-#     "[2026-10-15 08:30:00] [POS_01] "
-#     "item=Latte price=4.50 EUR (SUCCESS)\n"
-#     "--- PRINTER PAPER LOW WARNING ---\n"
-#     "[2026-10-15 08:31:00] [POS_01] "
-#     "item=Muffin price=3.94 EUR (SUCCESS)\n"
-#     "=== NETWORK SYNC OK ==="
-# )
 
-# result = parse_log(test_text)
-# print(result)
-
-# # Testing noise
-# noise_text = (
-#     "--- PRINTER PAPER LOW WARNING ---\n"
-#     "=== NETWORK SYNC OK ==="
-# )
-
-# print(parse_log(noise_text))
-
-
+# Temporary test of read_file() and parse_log()
 # Testing the read_file function on one of the files
 test_file = Path("data/2026/student_union/POS_01/register_sales.log")
 
@@ -147,6 +84,6 @@ file_text_content, encoding_used = read_file(test_file)
 
 # call the parcer function
 transactions = parse_log(file_text_content)
-print(transactions)
 
+print(f"Encoding used: {encoding_used}")
 print(f"Number of valid transactions: {len(transactions)}")
