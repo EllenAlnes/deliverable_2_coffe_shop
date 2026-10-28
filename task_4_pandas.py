@@ -82,4 +82,4 @@ def use_ratio(c_dataframe: pd.DataFrame) -> np.array:
     return compute_refund_ratio(refund_arr, success_arr)
  
 
-print(use_ratio(test))
+#print(use_ratio(test))
