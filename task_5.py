@@ -66,3 +66,18 @@ print(f"Active register IDs form config: {sorted(active_registers)}")
 # parse_log(file_text_content) - parser tekstinnholdet og returnerer gyldige transaksjoner som dictionaries.
 # Mål: behandle hver loggfil, en om gangen og samle alle transaksjonene i en felles liste
 
+# Create empty list for all transactions
+all_transactions = []
+
+# går gjennom alle filene en etter en
+for file in log_files:
+    file_text_content, encoding_used = read_file(log_file)
+
+    # parsing through the content
+    transactions = parse_log(file_text_content)
+
+    # collecting all transactions into one list
+    # using extend since transactions alredy is a list, and we want to combind the lists
+    all_transactions.extend(transactions)
+
+print(f"Number of transactions (combined): {len(all_transactions)}")
