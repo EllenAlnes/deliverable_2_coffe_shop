@@ -3,6 +3,7 @@
 # Recursive (rekursiv): Funksjonen kaller seg selv for å løse en mindre del av oppgaven.
 # Directory traversal: Å gå gjennom mapper og undermapper for å finne filer.
 
+import json
 from pathlib import Path
 
 # path.iterdir() gir oss elementene som ligger direktie i en mappe - må derfor bruke den rekursivt
@@ -55,5 +56,40 @@ for log_file in log_files:
 
 
 def find_active_registers(data: dict | list) -> set[str]:
-    """Find the active registers
-    active = True"""
+    """Find IDs fo all active registers in nested data.
+    
+    Arguments:
+        data: nested dictionaries and lists to search.
+        
+    Returns:
+        A set of IDs belonging to active registers"""
+
+    # empty set for collecting active registers
+    active_registers = set()
+
+    if isinstance(data, dict):
+    # isinstance(item, dict) asks if the item a dictionary
+        # Check wheter this dictionary describes an active register
+        if (
+            "id" in data
+            and data.get("active") is True
+        ):
+            active_registers.add(data["id"])
+
+        # Search recursively through the dictionary values
+        for value in data.values():
+            # data.values() gives the values inside the dict
+            # each value gets sendt back to the same function
+            # if it is a dict og a list the function "searches" it
+            # .update() adds all the found ids into the existing set
+            active_registers.update(find_active_registers(value))
+
+    elif isinstance(data, list):
+    # isinstance(item, list) asks if the item a list
+        # Search recursively through each element in the list
+        for item in data:
+            active_registers.update(find_active_registers(item))
+
+    return active_registers
+
+
