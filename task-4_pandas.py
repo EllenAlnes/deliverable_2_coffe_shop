@@ -1,7 +1,7 @@
 
 import numpy as np
 import pandas as pd
-from "task_3_cleaning" import compute_refund_ratio
+from task_3_cleaning import compute_refund_ratio
 
 
 # make a dummy version of the function from task 1 (last deloppgave)
@@ -82,4 +82,4 @@ def use_ratio(c_dataframe: pd.DataFrame) -> np.array:
     return compute_refund_ratio(refund_arr, success_arr)
  
 
-#print(use_ratio(test))
+print(use_ratio(test))
