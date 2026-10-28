@@ -16,23 +16,21 @@ def list_of_dict_opg1():
     return a
 
 
-def chrono(transactions: list[dict]) -> pd.DataFrame:
+
+def chrono(df: pd.DataFrame) -> pd.DataFrame:
     """Creates DataFrame of a list of dictionaries. Sorts the transactions by timestamps.
 
     Arguments:
-        transactions: List of dictionaries containing information of transactions.
+        df: DataFrame containing information of transactions.
 
     Returns:
         DataFrame with transactions in chronological order.
     """
-    df = pd.DataFrame(transactions)
     df["timestamp"] = pd.to_datetime(df["timestamp"])
     df = df.set_index("timestamp").sort_values("timestamp")
     return df
 
-test = chrono(list_of_dict_opg1())
-
-
+test = chrono(pd.DataFrame(list_of_dict_opg1())) 
 
 def one_hour(a_dataframe: pd.DataFrame) -> pd.DataFrame:
     """Calculates total price for each product within 1-hour windows.
