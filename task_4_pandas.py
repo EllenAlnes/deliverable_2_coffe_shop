@@ -30,7 +30,12 @@ def chrono(df: pd.DataFrame) -> pd.DataFrame:
     df = df.set_index("timestamp").sort_values("timestamp")
     return df
 
+<<<<<<< HEAD:task_4_pandas.py
 test = chrono(pd.DataFrame(list_of_dict_opg1())) 
+=======
+#test = chrono(list_of_dict_opg1())
+
+>>>>>>> main:task-4_pandas.py
 
 
 def one_hour(a_dataframe: pd.DataFrame) -> pd.DataFrame:

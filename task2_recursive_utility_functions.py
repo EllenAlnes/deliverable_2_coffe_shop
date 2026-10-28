@@ -1,0 +1,104 @@
+# recursive utility function 
+# Utility function: En hjelpefunksjon som utfører en bestemt oppgave, slik at vi kan gjenbruke den andre steder i programmet.
+# Recursive (rekursiv): Funksjonen kaller seg selv for å løse en mindre del av oppgaven.
+# Directory traversal: Å gå gjennom mapper og undermapper for å finne filer.
+
+import json
+from pathlib import Path
+
+# path.iterdir() gir oss elementene som ligger direktie i en mappe - må derfor bruke den rekursivt
+
+def find_log_files(directory: Path) -> list[Path]:
+    # directory: Path - funksjonen mottar en mappebane
+    # -> list[Path] - funksjonen skal returnere en liste med filbaner - ikke filinnholdet
+    """Find all log files in a directory and its subdirectories.
+    
+    The function searches recursively through the directory structure 
+    and collects the paths of all files ending in .log.
+    
+    Arguments:
+        directory: Path to the directory where the search begins.
+        
+    Returns:
+        A list of Path objects representing the log files found.
+    """
+
+    all_log_files = []
+
+    for item in directory.iterdir():
+
+        if item.is_dir():
+            # Search the subdirectory recursively and collect its log files
+
+            all_log_files.extend(find_log_files(item))  # This calls the function again for subfolders 
+
+        elif item.is_file():
+            # check file ending - .suffix gives fileending including . 
+            if item.suffix == ".log":
+                all_log_files.append(item)
+
+    return all_log_files
+
+
+
+# Testing the recursive functions
+test_directory = Path("data/2026/library_cafe")
+
+log_files = find_log_files(test_directory)
+
+print(f"Number of log files: {len(log_files)}")
+
+# Testing wether it finds 9 files - this is spesific for this filestructure not general
+#assert len(log_files) == 9
+
+for log_file in log_files:
+    print(log_file)
+
+
+def find_active_registers(data: dict | list) -> set[str]:
+    """Find IDs fo all active registers in nested data.
+    
+    Arguments:
+        data: nested dictionaries and lists to search.
+        
+    Returns:
+        A set of IDs belonging to active registers"""
+
+    # empty set for collecting active registers
+    active_registers = set()
+
+    if isinstance(data, dict):
+    # isinstance(item, dict) asks if the item a dictionary
+        # Check wheter this dictionary describes an active register
+        if (
+            "id" in data
+            and data.get("active") is True
+        ):
+            active_registers.add(data["id"])
+
+        # Search recursively through the dictionary values
+        for value in data.values():
+            # data.values() gives the values inside the dict
+            # each value gets sendt back to the same function
+            # if it is a dict og a list the function "searches" it
+            # .update() adds all the found ids into the existing set
+            active_registers.update(find_active_registers(value))
+
+    elif isinstance(data, list):
+    # isinstance(item, list) asks if the item a list
+        # Search recursively through each element in the list
+        for item in data:
+            active_registers.update(find_active_registers(item))
+
+    return active_registers
+
+
+# Testing
+config_path = Path("data/store_config.json")
+
+with config_path.open(encoding="utf-8") as file:
+    config_data = json.load(file)
+
+active_registers = find_active_registers(config_data)
+
+print(active_registers)
