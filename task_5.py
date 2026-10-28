@@ -43,8 +43,6 @@ for region in config_data["regions"]:
 
             print(f"{register["id"]}, {status}")
 
-# print
-print(f"Number of log files found: {len(log_files)}")
 # sorted sorts the set alfabeticly
 print(f"Active register IDs form config: {sorted(active_registers)}")
 
@@ -59,35 +57,23 @@ print(f"Active register IDs form config: {sorted(active_registers)}")
 # Mål: behandle hver loggfil, en om gangen og samle alle transaksjonene i en felles liste
 
 # Task 5.2: Process each log file one at a time and collect all transactions into a single list.
-
 # Create empty list for all transactions
 all_transactions = []
 
-# Go through all files one by one
+# Read and parse each log file
+# Collect all transactions into one combined list
 for log_file in sorted(log_files):
     file_text_content, encoding_used = read_file(log_file)
-
-    # Parse the content
     transactions = parse_log(file_text_content)
-
-    # Collect all transactions into one list
     all_transactions.extend(transactions)
-
-# TEST: Check all register IDs in the combined list
-print("\nRegister IDs in all_transactions:")
-print({
-    transaction["register_id"]
-    for transaction in all_transactions
-})
 
 print(f"Number of transactions: {len(all_transactions)}")
 
 # ------ task 5.3 ------
-
-# Build the initial DataFrame
+# Task 5.3 Build the initial DataFrame
 df = pd.DataFrame(all_transactions)
 
-# convert timestamt to datetime
+# Convert timestamt to datetime
 df["timestamp"] = pd.to_datetime(df["timestamp"])
 
 # Set timestamp as index
@@ -96,13 +82,10 @@ df = df.set_index("timestamp")
 # Sort transactions chronologically
 df = df.sort_index()
 
-# Controlling the result
+# Check the DataFrame
 print(df.head(20))
 df.info()    # Gives info about the DataFrame
 print(f"Number of transactions: {len(df)}")
-
-
-# testing av enentuelle feil
 print(df["register_id"].value_counts())
 
 
