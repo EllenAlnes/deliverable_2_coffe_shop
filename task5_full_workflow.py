@@ -1,7 +1,8 @@
 import re
 from pathlib import Path
 import pandas as pd
-from task_3_cleaning import clean_outliers
+from task_3_cleaning import clean_outliers, compute_refund_ratio
+from task_4_pandas import chrono, one_hour, by_status, use_ratio
 
 dummy_df = pd.DataFrame([
     {
@@ -38,21 +39,29 @@ dummy_df = pd.DataFrame([
     }
 ])
 
-dummy_df["timestamp"] = pd.to_datetime(dummy_df["timestamp"])
+#dummy_df["timestamp"] = pd.to_datetime(dummy_df["timestamp"])
 #dummy_df = dummy_df.set_index("timestamp") #tror ikke denne må med her
 
 # task 5-4: Apply NumPy outlier cleaning to remove 999 price glitches.
 dummy_df["price"] = clean_outliers(dummy_df)
 
-# task 5-5: Apply currency correction: multiply price by 10 for all transactions where
-# currency == "NOK" .
+# task 5-5: Apply currency correction: multiply price by 10 for all transactions where currency == "NOK" .
 
 dummy_df.loc[dummy_df["currency"] == "NOK", ["price"]] *= 10
-#print(dummy_df)
+#dummy_df.to_csv("cleaned_transactions.csv")
 
 # task 5-6: Generate resampled reports, pivot tables and refund ratios.
+#1 hourly_revenue.json : 
 
+chronologically = chrono(dummy_df)
+hourly_revenue = one_hour(chronologically)
+#hourly_revenue.to_json("hourly_revenue.json") # A JSON report containing total revenue per hour per item.
 
+revenue_pivot = by_status(chronologically)
+print(revenue_pivot)
+#revenue_pivot.to_csv("status_pivot_table.csv") # A CSV file containing a pivot table of total transaction revenue grouped by item across status categories.
+
+#3 item_refund_ratios.csv : A CSV table containing refund ratios for each itemtype.
 
 
 
@@ -61,4 +70,3 @@ dummy_df.loc[dummy_df["currency"] == "NOK", ["price"]] *= 10
 
 # OUTPUTS
 # convert to csv
-#dummy_df.to_csv("cleaned_transactions.csv")

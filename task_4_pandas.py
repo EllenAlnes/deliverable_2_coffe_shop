@@ -32,6 +32,7 @@ def chrono(df: pd.DataFrame) -> pd.DataFrame:
 
 test = chrono(pd.DataFrame(list_of_dict_opg1())) 
 
+
 def one_hour(a_dataframe: pd.DataFrame) -> pd.DataFrame:
     """Calculates total price for each product within 1-hour windows.
 
@@ -57,11 +58,13 @@ def by_status(b_dataframe: pd.DataFrame) -> pd.pivot_table:
     """    
     return pd.pivot_table(
         b_dataframe,
-        index="item", 
-        columns="status", 
-        aggfunc="size"
+        index="item",
+        columns="status",
+        values="price",
+        aggfunc="sum",
+        fill_value=0
     )
-#print(by_status(test))
+print(by_status(test))
 
 
 def use_ratio(c_dataframe: pd.DataFrame) -> np.array:
