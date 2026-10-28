@@ -39,16 +39,16 @@ dummy_df = pd.DataFrame([
 ])
 
 dummy_df["timestamp"] = pd.to_datetime(dummy_df["timestamp"])
-#dummy_df = dummy_df.set_index("timestamp")
+#dummy_df = dummy_df.set_index("timestamp") #tror ikke denne må med her
 
 # task 5-4: Apply NumPy outlier cleaning to remove 999 price glitches.
-dummy_df["price"] = clean_outliers(dummy_df["price"])
+dummy_df["price"] = clean_outliers(dummy_df)
 
 # task 5-5: Apply currency correction: multiply price by 10 for all transactions where
 # currency == "NOK" .
 
-dummy_df.loc[dummy_df["currency"] == "NOK"] *= 10
-print(dummy_df)
+dummy_df.loc[dummy_df["currency"] == "NOK", ["price"]] *= 10
+#print(dummy_df)
 
 # task 5-6: Generate resampled reports, pivot tables and refund ratios.
 
