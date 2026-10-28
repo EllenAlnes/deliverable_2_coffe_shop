@@ -16,22 +16,26 @@ def list_of_dict_opg1():
     return a
 
 
-def chrono(transactions: list[dict]) -> pd.DataFrame:
+
+def chrono(df: pd.DataFrame) -> pd.DataFrame:
     """Creates DataFrame of a list of dictionaries. Sorts the transactions by timestamps.
 
     Arguments:
-        transactions: List of dictionaries containing information of transactions.
+        df: DataFrame containing information of transactions.
 
     Returns:
         DataFrame with transactions in chronological order.
     """
-    df = pd.DataFrame(transactions)
     df["timestamp"] = pd.to_datetime(df["timestamp"])
     df = df.set_index("timestamp").sort_values("timestamp")
     return df
 
+<<<<<<< HEAD:task_4_pandas.py
+test = chrono(pd.DataFrame(list_of_dict_opg1())) 
+=======
 #test = chrono(list_of_dict_opg1())
 
+>>>>>>> main:task-4_pandas.py
 
 
 def one_hour(a_dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -59,9 +63,11 @@ def by_status(b_dataframe: pd.DataFrame) -> pd.pivot_table:
     """    
     return pd.pivot_table(
         b_dataframe,
-        index="item", 
-        columns="status", 
-        aggfunc="size"
+        index="item",
+        columns="status",
+        values="price",
+        aggfunc="sum",
+        fill_value=0
     )
 #print(by_status(test))
 
@@ -82,4 +88,4 @@ def use_ratio(c_dataframe: pd.DataFrame) -> np.array:
     return compute_refund_ratio(refund_arr, success_arr)
  
 
-#print(use_ratio(test))
+print(use_ratio(test))
