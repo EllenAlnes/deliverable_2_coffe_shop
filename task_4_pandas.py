@@ -64,7 +64,7 @@ def by_status(b_dataframe: pd.DataFrame) -> pd.pivot_table:
         aggfunc="sum",
         fill_value=0
     )
-print(by_status(test))
+#print(by_status(test))
 
 
 def use_ratio(c_dataframe: pd.DataFrame) -> np.array:
@@ -83,4 +83,4 @@ def use_ratio(c_dataframe: pd.DataFrame) -> np.array:
     return compute_refund_ratio(refund_arr, success_arr)
  
 
-#print(use_ratio(test))
+print(use_ratio(test))

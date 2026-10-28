@@ -51,22 +51,16 @@ dummy_df.loc[dummy_df["currency"] == "NOK", ["price"]] *= 10
 #dummy_df.to_csv("cleaned_transactions.csv")
 
 # task 5-6: Generate resampled reports, pivot tables and refund ratios.
-#1 hourly_revenue.json : 
 
 chronologically = chrono(dummy_df)
 hourly_revenue = one_hour(chronologically)
 #hourly_revenue.to_json("hourly_revenue.json") # A JSON report containing total revenue per hour per item.
 
-revenue_pivot = by_status(chronologically)
-print(revenue_pivot)
+revenue_pivot = by_status(dummy_df)
 #revenue_pivot.to_csv("status_pivot_table.csv") # A CSV file containing a pivot table of total transaction revenue grouped by item across status categories.
 
-#3 item_refund_ratios.csv : A CSV table containing refund ratios for each itemtype.
+rat_items = pd.DataFrame(use_ratio(dummy_df))
+rat_items.to_csv("rat_items.csv", index=False) # A CSV table containing refund ratios for each itemtype.
 
 
 
-
-
-
-# OUTPUTS
-# convert to csv

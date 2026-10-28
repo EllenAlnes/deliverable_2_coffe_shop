@@ -52,7 +52,7 @@ def compute_refund_ratio(sales_count: np.ndarray, refund_count: np.ndarray) -> n
             refund_count: Array of the refund count for each element.
 
         Returns:
-            Array containing the sales/refund ratio element-wise.
+            Array containing the refund/sales ratio element-wise.
         """
     ratios = []
     for ref, sale in zip(refund_count, sales_count):
