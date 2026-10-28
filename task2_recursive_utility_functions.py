@@ -93,3 +93,12 @@ def find_active_registers(data: dict | list) -> set[str]:
     return active_registers
 
 
+# Testing
+config_path = Path("data/store_config.json")
+
+with config_path.open(encoding="utf-8") as file:
+    config_data = json.load(file)
+
+active_registers = find_active_registers(config_data)
+
+print(active_registers)
