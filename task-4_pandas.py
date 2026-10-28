@@ -1,7 +1,7 @@
 
 import numpy as np
 import pandas as pd
-from "task_3_cleaning.py" import compute_refund_ratio()
+from task_3_cleaning import compute_refund_ratio
 
 
 # make a dummy version of the function from task 1 (last deloppgave)
@@ -30,7 +30,7 @@ def chrono(transactions: list[dict]) -> pd.DataFrame:
     df = df.set_index("timestamp").sort_values("timestamp")
     return df
 
-test = chrono(list_of_dict_opg1())
+#test = chrono(list_of_dict_opg1())
 
 
 
