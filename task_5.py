@@ -1,20 +1,15 @@
-from pathlib import Path
 import json
+from pathlib import Path
 
-from task1_file_ingestion_and_regular_expressions import read_file
-from task1_file_ingestion_and_regular_expressions import parse_log
-from task2_recursive_utility_functions import find_log_files
-from task2_recursive_utility_functions import find_active_registers
+import pandas as pd
+
+from task1_file_ingestion_and_regular_expressions import parse_log, read_file
+from task2_recursive_utility_functions import find_active_registers, find_log_files
 
 # find_log_files(directory)	    Finner .log-filer i mapper og undermapper og returnerer en liste med Path-objekter.
 # find_active_registers(data)   Går rekursivt gjennom nøstede dictionaries og lister og returnerer et set med aktive register-ID-er.
 # read_file(input_file)	        Leser én fil og returnerer filinnholdet og tegnkodingen.
 # parse_log(file_text_content)	Leser logginnhold linje for linje og returnerer gyldige transaksjoner som dictionaries.
-
-#til oppgave 2 i task5
-# listoflogs = (bruke funksjonen task 2)
-# co_en = [] # list of tuples containing (file_text_content, encoding_used)  
-# co_en = [read_file(log) for log in listoflogs] 
 
 # ------ task 5.1 ------
 
@@ -23,9 +18,6 @@ data_dictionary = Path("data/2026")
 log_files = find_log_files(data_dictionary)
 
 print(f"Number of log files found: {len(log_files)}")
-
-for log_file in sorted(log_files):
-    print(log_file)
 
 # Store confuguration - data from store-config.json
 config_path = Path("data/store_config.json")
@@ -66,18 +58,60 @@ print(f"Active register IDs form config: {sorted(active_registers)}")
 # parse_log(file_text_content) - parser tekstinnholdet og returnerer gyldige transaksjoner som dictionaries.
 # Mål: behandle hver loggfil, en om gangen og samle alle transaksjonene i en felles liste
 
+# Task 5.2: Process each log file one at a time and collect all transactions into a single list.
+
 # Create empty list for all transactions
 all_transactions = []
 
-# går gjennom alle filene en etter en
-for file in log_files:
+# Go through all files one by one
+for log_file in sorted(log_files):
     file_text_content, encoding_used = read_file(log_file)
 
-    # parsing through the content
+    # Parse the content
     transactions = parse_log(file_text_content)
 
-    # collecting all transactions into one list
-    # using extend since transactions alredy is a list, and we want to combind the lists
+    # Collect all transactions into one list
     all_transactions.extend(transactions)
 
-print(f"Number of transactions (combined): {len(all_transactions)}")
+# TEST: Check all register IDs in the combined list
+print("\nRegister IDs in all_transactions:")
+print({
+    transaction["register_id"]
+    for transaction in all_transactions
+})
+
+print(f"Number of transactions: {len(all_transactions)}")
+
+# ------ task 5.3 ------
+
+# Build the initial DataFrame
+df = pd.DataFrame(all_transactions)
+
+# convert timestamt to datetime
+df["timestamp"] = pd.to_datetime(df["timestamp"])
+
+# Set timestamp as index
+df = df.set_index("timestamp")
+
+# Sort transactions chronologically
+df = df.sort_index()
+
+# Controlling the result
+print(df.head(20))
+df.info()    # Gives info about the DataFrame
+print(f"Number of transactions: {len(df)}")
+
+
+# testing av enentuelle feil
+print(df["register_id"].value_counts())
+
+
+
+
+
+# NB!!!
+# I oppgaven skal du også bruke active_registers i den samlede arbeidsflyten. 
+# Foreløpig finner du de aktive kassene, men du bruker ikke settet til å filtrere transaksjonene. 
+# Siden dere har valgt å analysere alle loggfilene, er det helt greit at dere beholder alle 720 transaksjonene. 
+# Bare sørg for at dere forklarer valget i diskusjonen av resultatene, 
+# særlig fordi konfigurasjonen og loggfilene ikke nødvendigvis beskriver nøyaktig de samme kassene.
