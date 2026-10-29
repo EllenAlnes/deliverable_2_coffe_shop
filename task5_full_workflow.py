@@ -1,5 +1,4 @@
-import re
-from pathlib import Path
+
 import pandas as pd
 from task_3_cleaning import clean_outliers
 from task_4_pandas import chrono, one_hour, by_status, use_ratio
@@ -92,7 +91,6 @@ print(df.head(20))
 df.info()    # Gives info about the DataFrame
 print(f"Number of transactions: {len(df)}")
 print(df["register_id"].value_counts())
-
 
 
 # task 5-4: Apply NumPy outlier cleaning to remove 999 price glitches.
